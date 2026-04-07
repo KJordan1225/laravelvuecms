@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Support\Seo;
 use Illuminate\View\View;
 
 class PostController extends Controller
@@ -16,14 +17,23 @@ class PostController extends Controller
             ->latest('published_at')
             ->paginate(12);
 
-        return view('cms.posts.index', compact('posts'));
+        return view('cms.posts.index', [
+            'title' => 'Posts',
+            'metaDescription' => 'Browse published posts.',
+            'posts' => $posts,
+        ]);
     }
 
     public function show(string $slug): View
     {
         $post = Post::query()
             ->published()
-            ->with(['category', 'author', 'tags'])
+            ->with([
+                'category',
+                'author',
+                'tags',
+                'comments' => fn ($q) => $q->where('is_approved', true)->latest(),
+            ])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -36,6 +46,11 @@ class PostController extends Controller
             ->take(3)
             ->get();
 
-        return view('cms.posts.show', compact('post', 'relatedPosts'));
+        return view('cms.posts.show', [
+            'title' => Seo::title($post->seo_meta, $post->title),
+            'metaDescription' => Seo::description($post->seo_meta, $post->excerpt ?? ''),
+            'post' => $post,
+            'relatedPosts' => $relatedPosts,
+        ]);
     }
 }

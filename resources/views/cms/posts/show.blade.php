@@ -34,6 +34,56 @@
                 @endforeach
             </div>
         @endif
+
+        @if($post->allow_comments)
+            <div class="comment-box">
+                <h2>Leave a Comment</h2>
+
+                <form method="POST" action="{{ route('posts.comments.store', $post->slug) }}">
+                    @csrf
+
+                    @guest
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div>
+                                <label>Name</label>
+                                <input type="text" name="author_name" class="form-control" value="{{ old('author_name') }}">
+                                @error('author_name') <div class="form-error">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div>
+                                <label>Email</label>
+                                <input type="email" name="author_email" class="form-control" value="{{ old('author_email') }}">
+                                @error('author_email') <div class="form-error">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+                    @endguest
+
+                    <div style="margin-top:16px;">
+                        <label>Comment</label>
+                        <textarea name="body" class="form-control" rows="5">{{ old('body') }}</textarea>
+                        @error('body') <div class="form-error">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div style="margin-top:16px;">
+                        <button type="submit" class="btn btn-primary">Submit Comment</button>
+                    </div>
+                </form>
+
+                @if($post->comments->count())
+                    <div style="margin-top:28px;">
+                        <h3>Comments</h3>
+
+                        @foreach($post->comments as $comment)
+                            <div style="border-top:1px solid #e5e7eb;padding:16px 0;">
+                                <strong>{{ $comment->author_name }}</strong>
+                                <div class="public-meta">{{ $comment->created_at?->format('M d, Y g:i A') }}</div>
+                                <p>{{ $comment->body }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        @endif
     </article>
 
     @if($relatedPosts->count())
@@ -53,9 +103,7 @@
                             <h3>
                                 <a href="{{ route('posts.show', $item->slug) }}">{{ $item->title }}</a>
                             </h3>
-                            <div class="public-meta">
-                                {{ optional($item->published_at)->format('M d, Y') }}
-                            </div>
+                            <div class="public-meta">{{ optional($item->published_at)->format('M d, Y') }}</div>
                             <p>{{ $item->excerpt }}</p>
                         </div>
                     </article>

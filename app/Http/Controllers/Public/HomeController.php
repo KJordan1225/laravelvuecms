@@ -26,10 +26,16 @@ class HomeController extends Controller
             ->take(12)
             ->get();
 
+        $siteName = Setting::getValue('site_name', 'My Laravel CMS');
+        $siteTagline = Setting::getValue('site_tagline', 'A modern CMS');
+        $homepageTitle = Setting::getValue('homepage_title', 'Welcome');
+
         return view('cms.home', [
-            'siteName' => Setting::getValue('site_name', 'My Laravel CMS'),
-            'siteTagline' => Setting::getValue('site_tagline', 'A modern CMS'),
-            'homepageTitle' => Setting::getValue('homepage_title', 'Welcome'),
+            'title' => $siteName,
+            'metaDescription' => $siteTagline,
+            'siteName' => $siteName,
+            'siteTagline' => $siteTagline,
+            'homepageTitle' => $homepageTitle,
             'featuredPosts' => $featuredPosts,
             'latestPosts' => $latestPosts,
         ]);

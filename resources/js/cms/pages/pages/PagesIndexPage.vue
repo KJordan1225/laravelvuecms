@@ -61,6 +61,7 @@
             </tr>
           </tbody>
         </table>
+        <PaginationNav :meta="pages.meta" @change="changePage" />
       </div>
     </BaseCard>
   </div>
@@ -71,20 +72,25 @@ import { onMounted, reactive } from 'vue'
 import { usePagesStore } from '@/cms/stores/pages'
 import BaseCard from '@/cms/components/ui/BaseCard.vue'
 import PageHeader from '@/cms/components/ui/PageHeader.vue'
+import PaginationNav from '@/cms/components/ui/PaginationNav.vue'
 
 const pages = usePagesStore()
 
 const filters = reactive({
   search: '',
+  page: 1,
 })
 
 const load = () => {
-  pages.fetchAll({ search: filters.search })
+  pages.fetchAll({
+    search: filters.search,
+    page: filters.page,
+  })
 }
 
-const destroy = async (id) => {
-  if (!window.confirm('Delete this page?')) return
-  await pages.delete(id)
+const changePage = (page) => {
+  filters.page = page
+  load()
 }
 
 onMounted(load)

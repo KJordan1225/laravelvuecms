@@ -63,6 +63,7 @@
             </tr>
           </tbody>
         </table>
+        <PaginationNav :meta="posts.meta" @change="changePage" />
       </div>
     </BaseCard>
   </div>
@@ -73,6 +74,7 @@ import { onMounted, reactive } from 'vue'
 import { usePostsStore } from '@/cms/stores/posts'
 import BaseCard from '@/cms/components/ui/BaseCard.vue'
 import PageHeader from '@/cms/components/ui/PageHeader.vue'
+import PaginationNav from '@/cms/components/ui/PaginationNav.vue'
 
 const posts = usePostsStore()
 
@@ -81,7 +83,15 @@ const filters = reactive({
 })
 
 const load = () => {
-  posts.fetchAll({ search: filters.search })
+  posts.fetchAll({
+    search: filters.search,
+    page: filters.page,
+  })
+}
+
+const changePage = (page) => {
+  filters.page = page
+  load()
 }
 
 const destroy = async (id) => {

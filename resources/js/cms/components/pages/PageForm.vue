@@ -33,9 +33,11 @@
       />
     </div>
 
-    <RichEditor
+    <BaseTextarea
       v-model="form.body"
       label="Body"
+      placeholder="Write page content"
+      :rows="12"
       :error="firstError(errors, 'body')"
     />
 
@@ -82,7 +84,6 @@ import BaseSelect from '@/cms/components/ui/BaseSelect.vue'
 import BaseButton from '@/cms/components/ui/BaseButton.vue'
 import { pageStatuses } from '@/cms/constants/pageStatuses'
 import { useErrorMessage } from '@/cms/composables/useErrorMessage'
-import RichEditor from '@/cms/components/ui/RichEditor.vue'
 
 const props = defineProps({
   modelValue: {

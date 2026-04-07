@@ -556,3 +556,36 @@ a {
     flex-direction: column;
   }
 }
+
+.pagination-wrap {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-text {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.rich-editor {
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px;
+}
+
+.rich-editor:focus {
+  outline: none;
+  border-color: var(--primary);
+}
